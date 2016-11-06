@@ -10,7 +10,7 @@ This is a C++ version of Piotr Dollar's Structured Edge Detection Toolbox, and s
 [Opencv2](http://opencv.org/downloads.html)
  is required. The installation documentation can be find [here](http://docs.opencv.org/2.4/doc/tutorials/introduction/table_of_content_introduction/table_of_content_introduction.html).
  (Note: opencv 3 is also plausible if the writeout function in gadgets.cpp is removed.)
-And you need to install the matiolib. Just switch to the matio folder, and execute the following commands:
+And you need to install the matiolib. Download the matio package, and just switch to the matio folder, and execute the following commands:
 
 ```code:
 $ make clean
@@ -19,6 +19,9 @@ $ make
 $ make check
 $ make install
 ```
+
+If you are using Mac OS with homebrew, just use brew install to install opencv2 and libmatio.
+
 
 ###Getting Started
 Switch to the main folder, and type the following command to run compile and run:
