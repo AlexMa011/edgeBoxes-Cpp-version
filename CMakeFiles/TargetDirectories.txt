@@ -1,0 +1,3 @@
+/Users/alex/Projects/parts localization/CMakeFiles/edit_cache.dir
+/Users/alex/Projects/parts localization/CMakeFiles/rebuild_cache.dir
+/Users/alex/Projects/parts localization/CMakeFiles/parts_localization.dir
