@@ -4,15 +4,13 @@
 
 #include <iostream>
 #include <opencv2/opencv.hpp>
-#include <algorithm>
-#include <string>
-#include <cmath>
-#include <tuple>
 #include "model.h"
-#include <ctime>
+
+
 
 using namespace std;
 using namespace cv;
+
 
 
 _para initial_para();
@@ -23,59 +21,96 @@ Mat parts_localization_main(Mat, Mat, _para);
 
 Mat edgesNms(Mat, Mat, int, int, float, int);
 
-Mat edgeBoxesImg(Mat I, _model model, _para);
-
 void output(string, Mat, Mat, _model);
 
-void writeout(string, Mat, const char*);
+void writeout(string, Mat, const char *);
 
-void parts_localization(string picname, _model model) {
-    Mat I = imread(picname);
-    assert(I.rows!=0 && I.cols!=0);
-    cvtColor(I, I, COLOR_BGR2RGB);
-    _para para = initial_para();
-    Mat bbs =  edgeBoxesImg(I, model, para);
-    output(picname, bbs, I, model);
+Point2f RotatePoint(const Point2f &, const Point2f &, float);
+
+void generate_train(string, Mat, Mat, _model);
+
+tuple<int, int> siftflow(Mat image, int option, int pin);
+
+// This function calculates the angle of the line from A to B with respect to the positive X-axis in degrees
+int angle(Point A, Point B) {
+    double val = (B.y-A.y)/(B.x-A.x); // calculate slope between the two points
+    val = val - pow(val,3)/3 + pow(val,5)/5; // find arc tan of the slope using taylor series approximation
+    val = ((int)(val*180/3.14)) % 360; // Convert the angle in radians to degrees
+    if(B.x < A.x) val+=180;
+    if(val < 0) val = 360 + val;
+    return (int)val;
 }
 
-Mat edgeBoxesImg(Mat I, _model model, _para o) {
+void parts_localization(string picname, _model model, _para o) {
+    Mat I = imread(picname);
+    assert(I.rows != 0 && I.cols != 0);
+
     clock_t begin = clock();
     model.opts.nms = 0;
-    tuple<Mat, Mat, Mat, Mat> detect = edgesDetect(I, model, 4);
+    Mat I_resize;
+    float shrink = 1;
+    resize(I, I_resize, Size(), 1/shrink, 1/shrink);
+    tuple<Mat, Mat, Mat, Mat> detect = edgesDetect(I_resize, model, 4);
+    //out << ((double) clock() - begin) / CLOCKS_PER_SEC << endl;
     Mat E, O, unuse1, unuse2;
     tie(E, O, unuse1, unuse2) = detect;
-//    display the edge detection result
-//    Mat E_norm;
-//    normalize(E,E_norm,0,1,NORM_MINMAX,-1);
-//    imshow("dfsa", E_norm);
-//    waitKey(60000);
-
+    //cout << ((double) clock() - begin) / CLOCKS_PER_SEC << endl;
     E = edgesNms(E, O, 2, 0, 1, model.opts.nThreads);
     Mat bbs;
-    bbs = parts_localization_main(E, O, o);
-    return bbs;
-}
+    bbs = parts_localization_main(E, O, o) * shrink;
+    //cout << ((double) clock() - begin) / CLOCKS_PER_SEC << endl;
 
-void output(string picname, Mat bbs, Mat I, _model model){
-    for (int i = 0; i < 5; i++) {
+
+    string picsuffix = ".jpg";
+    unsigned long picfolderxpos = picname.find("/");
+    string filename = picname.erase(0, picfolderxpos + 1);
+    unsigned long picsuffixpos = filename.find(".");
+    filename.erase(picsuffixpos, filename.length() - picsuffixpos);
+
+    Mat I_draw;
+    I.copyTo(I_draw);
+
+
+    //for top10 box scores
+
+    for (int i = 0; i < 300; i++) {
+
+        //draw the bbox
         Point2f p1(bbs.at<float>(i, 0), bbs.at<float>(i, 1));
         Point2f p2(bbs.at<float>(i, 0) + bbs.at<float>(i, 2), bbs.at<float>(i, 1) + bbs.at<float>(i, 3));
-        rectangle(I, p1, p2, 1);
+        Point2f p3(bbs.at<float>(i, 0), bbs.at<float>(i, 1) + bbs.at<float>(i, 3));
+        Point2f p4(bbs.at<float>(i, 0) + bbs.at<float>(i, 2), bbs.at<float>(i, 1));
+
+
+        int tlx = (int) bbs.at<float>(i, 0);
+        int tly = (int) bbs.at<float>(i, 1);
+        int brx = (int) (bbs.at<float>(i, 0) + bbs.at<float>(i, 2));
+        int bry = (int) (bbs.at<float>(i, 1) + bbs.at<float>(i, 3));
+
+        Mat box;
+        box = I.colRange(tlx, brx).rowRange(tly, bry);
+
+        rectangle(I_draw, p1, p2, 1);
+
     }
+
+
     //store bbs in csv file if needed
-    string folder ="data/";
+    string folder = "output/";
     string suffix = "bbs.csv";
-    string filename = picname.erase(0,9);
-    string picsuffix = "_result.jpg";
-    string outpic = "pictures/"+filename+picsuffix;
-    unsigned long deletepicsuffixpos = filename.find(".");
-    filename.erase(deletepicsuffixpos,filename.length()-deletepicsuffixpos);
-    string output = folder+filename+suffix;
-    writeout(output,bbs,"csv");
-    imwrite(outpic, I);
+    string outpic = folder + filename + "_result" + picsuffix;
+    string output = folder + filename + suffix;
+    writeout(output, bbs, "csv");
+    imwrite(outpic, I_draw);
     //display the box, the picture stays for one minute
-    if(model.opts.showpic == 1){
-        imshow("bboxs", I);
-        waitKey(model.opts.showtime*1000);
+    if (model.opts.showpic == 1) {
+        imshow("boxs", I_draw);
+        waitKey(model.opts.showtime * 1000);
     }
+
+
+    I_draw.release();
+
 }
+
+

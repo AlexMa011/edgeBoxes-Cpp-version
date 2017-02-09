@@ -3,14 +3,10 @@
 * Code written by Piotr Dollar and Larry Zitnick, 2014.
 * Licensed under the MSR-LA Full Rights License [see license.txt]
 *******************************************************************************/
-#include "math.h"
 #include <algorithm>
 #include <vector>
 #include <iostream>
 #include <opencv2/opencv.hpp>
-#include <string>
-#include <cmath>
-#include <tuple>
 #include "model.h"
 
 using namespace std;
@@ -127,9 +123,13 @@ private:
 ////////////////////////////////////////////////////////////////////////////////
 
 void EdgeBoxGenerator::generate(Boxes &boxes, arrayf &E, arrayf &O, arrayf &V) {
+    //clock_t begin = clock();
     clusterEdges(E, O, V);
+    //cout<<((double)clock()-begin)/CLOCKS_PER_SEC<<endl;
     prepDataStructs(E);
+    //cout<<((double)clock()-begin)/CLOCKS_PER_SEC<<endl;
     scoreAllBoxes(boxes);
+    //cout<<((double)clock()-begin)/CLOCKS_PER_SEC<<endl;
 }
 
 void EdgeBoxGenerator::clusterEdges(arrayf &E, arrayf &O, arrayf &V) {
@@ -706,7 +706,7 @@ Mat parts_localization_main(Mat E0, Mat O0, _para o) {
     edgeBoxGen._clusterMinMag = o.clusterMinMag;
     edgeBoxGen._maxAspectRatio = o.maxAspectRatio;
     edgeBoxGen._minBoxArea = o.minBoxArea;
-    edgeBoxGen._maxBoxLength = o.maxBoxLength;
+    edgeBoxGen._maxBoxLength = std::min(std::min((int)o.maxBoxLength,h),w);
     edgeBoxGen._gamma = o.gamma;
     edgeBoxGen._kappa = o.kappa;
     edgeBoxGen.generate(boxes, E, O, V);

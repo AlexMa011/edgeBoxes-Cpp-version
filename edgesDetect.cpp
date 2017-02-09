@@ -4,12 +4,7 @@
 
 #include <iostream>
 #include <opencv2/opencv.hpp>
-#include <algorithm>
-#include <string>
-#include <cmath>
-#include <tuple>
 #include "model.h"
-#include <ctime>
 
 using namespace std;
 using namespace cv;
@@ -25,8 +20,6 @@ Mat edgesNms(Mat, Mat, int, int, float, int);
 void getadd(Mat, float *);
 
 void fillmat(float *, Mat);
-
-Mat imPadding(Mat, int, int, int, int);
 
 void writeCSV(string, Mat);
 
@@ -68,9 +61,10 @@ tuple<Mat, Mat, Mat, Mat> edgesDetect(Mat I, _model model, int nargout) {
     const int segDims[5] = {gtWidth, gtWidth, h1, w1, nTreesEval};
 
 
+
     //define outputs
     Mat E(rowsiz, colsiz, CV_32FC1);
-    Mat O(rowsiz, colsiz, CV_32FC1);
+    //Mat O(rowsiz, colsiz, CV_32FC1);
     Mat segs(5, segDims, CV_8UC1);
     Mat inds(3, indDims, CV_32SC1);
     tuple<Mat, Mat, Mat, Mat> output;
@@ -111,21 +105,26 @@ tuple<Mat, Mat, Mat, Mat> edgesDetect(Mat I, _model model, int nargout) {
             model.opts = opts;
         }
     } else {
+
         // pad image, making divisible by 4
         int r = (int) opts.imWidth / 2;
         int p[4];
         for (int i = 0; i < 4; i++) p[i] = r;
         p[1] = p[1] + (4 - (rowsiz + 2 * r) % 4) % 4;
         p[3] = p[3] + (4 - (colsiz + 2 * r) % 4) % 4;
-        Mat I_padding = imPadding(I, p[0], p[1], p[2], p[3]);
+        Mat I_padding;
+        copyMakeBorder(I, I_padding, p[0], p[1], p[2], p[3], BORDER_REFLECT);
         I_padding.copyTo(I);
         I_padding.release();
 
 
 
 
+
         //compute features and apply forest to image
         tuple<Mat, Mat> chns = edgesChns(I, opts);
+
+
         Mat chnsReg;
         Mat chnsSim;
         tie(chnsReg, chnsSim) = chns;
@@ -139,9 +138,13 @@ tuple<Mat, Mat, Mat, Mat> edgesDetect(Mat I, _model model, int nargout) {
             I_conv.release();
         }
 
-        //add edgesDetectMex
+
+
+
         tuple<Mat, Mat, Mat> mainoutput = edgesDetectmain(model, I, chnsReg, chnsSim);
         tie(E, inds, segs) = mainoutput;
+
+
 
         //normalize and finalize edge maps
         double t = pow(opts.stride, 2) / pow(opts.gtWidth, 2) / opts.nTreesEval;
@@ -161,36 +164,31 @@ tuple<Mat, Mat, Mat, Mat> edgesDetect(Mat I, _model model, int nargout) {
 
 
     //compute approximate orientation O from edges E
-    if ((nargout > 1 || opts.nms) && opts.nms != -1) {
-        Mat Ox, Oy, Oxx, Oxy, Oyy;
-        Sobel(ConvTri(E, 4), Ox, -1, 1, 0);
-        Sobel(ConvTri(E, 4), Ox, -1, 0, 1);
-        Sobel(ConvTri(E, 4), Oxx, -1, 2, 0);
-        Sobel(ConvTri(E, 4), Oxy, -1, 1, 1);
-        Sobel(ConvTri(E, 4), Oyy, -1, 0, 2);
-        // O = mod(atan(Oyy.*-sign(Oxy)./(Oxx+1e-5)),Pi)
-        float *o = new float[rowsiz * colsiz];
-        float *ox = new float[rowsiz * colsiz];
-        float *oy = new float[rowsiz * colsiz];
-        float *oxx = new float[rowsiz * colsiz];
-        float *oxy = new float[rowsiz * colsiz];
-        float *oyy = new float[rowsiz * colsiz];
-        getadd(Ox, ox);
-        getadd(Oy, oy);
-        getadd(Oxx, oxx);
-        getadd(Oxy, oxy);
-        getadd(Oyy, oyy);
-        for (int i = 0; i < rowsiz * colsiz; i++) {
-            int xysign = -((oxy[i] > 0) - (oxy[i] < 0));
-            o[i] = (atan((oyy[i] * xysign / (oxx[i] + 1e-5))) > 0) ? (float) fmod(
-                    atan((oyy[i] * xysign / (oxx[i] + 1e-5))), M_PI) : (float) fmod(
-                    atan((oyy[i] * xysign / (oxx[i] + 1e-5))) + M_PI, M_PI);
-        }
-        fillmat(o, O);
+    Mat Oxx, Oxy, Oyy;
+    Mat E_conv = ConvTri(E, 4);
+    Sobel(E_conv, Oxx, -1, 2, 0);
+    Sobel(E_conv, Oxy, -1, 1, 1);
+    Sobel(E_conv, Oyy, -1, 0, 2);
+    E_conv.release();
+
+    float *o = new float[rowsiz * colsiz];
+    float *oxx = (float *) Oxx.data;
+    float *oxy = (float *) Oxy.data;
+    float *oyy = (float *) Oyy.data;
+    for (int i = 0; i < rowsiz * colsiz; i++) {
+        int xysign = -((oxy[i] > 0) - (oxy[i] < 0));
+        o[i] = (atan((oyy[i] * xysign / (oxx[i] + 1e-5))) > 0) ? (float) fmod(
+                atan((oyy[i] * xysign / (oxx[i] + 1e-5))), M_PI) : (float) fmod(
+                atan((oyy[i] * xysign / (oxx[i] + 1e-5))) + M_PI, M_PI);
     }
+    Oxx.release();
+    Oxy.release();
+    Oyy.release();
+    Mat O(rowsiz, colsiz, CV_32FC1, o);
+
 
     //perform nms
-    if(opts.nms > 0)
+    if (opts.nms > 0)
         E = edgesNms(E, O, 1, 5, 1.01, opts.nThreads);
 
     output = make_tuple(E, O, inds, segs);
