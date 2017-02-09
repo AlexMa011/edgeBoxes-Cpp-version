@@ -21,25 +21,9 @@ Mat parts_localization_main(Mat, Mat, _para);
 
 Mat edgesNms(Mat, Mat, int, int, float, int);
 
-void output(string, Mat, Mat, _model);
 
 void writeout(string, Mat, const char *);
 
-Point2f RotatePoint(const Point2f &, const Point2f &, float);
-
-void generate_train(string, Mat, Mat, _model);
-
-tuple<int, int> siftflow(Mat image, int option, int pin);
-
-// This function calculates the angle of the line from A to B with respect to the positive X-axis in degrees
-int angle(Point A, Point B) {
-    double val = (B.y-A.y)/(B.x-A.x); // calculate slope between the two points
-    val = val - pow(val,3)/3 + pow(val,5)/5; // find arc tan of the slope using taylor series approximation
-    val = ((int)(val*180/3.14)) % 360; // Convert the angle in radians to degrees
-    if(B.x < A.x) val+=180;
-    if(val < 0) val = 360 + val;
-    return (int)val;
-}
 
 void parts_localization(string picname, _model model, _para o) {
     Mat I = imread(picname);
@@ -73,7 +57,7 @@ void parts_localization(string picname, _model model, _para o) {
 
     //for top10 box scores
 
-    for (int i = 0; i < 300; i++) {
+    for (int i = 0; i < 5; i++) {
 
         //draw the bbox
         Point2f p1(bbs.at<float>(i, 0), bbs.at<float>(i, 1));

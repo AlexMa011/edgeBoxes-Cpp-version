@@ -681,9 +681,9 @@ Mat parts_localization_main(Mat E0, Mat O0, _para o) {
     // check and get inputs
     arrayf E;
     arrayf O;
-    int h = (int) E0.rows;
+    int h = E0.rows;
     O._h = E._h = h;
-    int w = (int) E0.cols;
+    int w = E0.cols;
     O._w = E._w = w;
     E._x = new float[h * w];
     O._x = new float[h * w];
