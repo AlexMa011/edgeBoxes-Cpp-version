@@ -12,16 +12,16 @@ typedef unsigned int uint32;
 typedef unsigned short uint16;
 typedef unsigned char uint8;
 
-class _opt{
+class _opt {
 public:
     uint32 imWidth, gtWidth;
     uint32 nPos, nNeg, nImgs, nTrees;
     double fracFtrs;
     uint32 minCount, minChild;
     uint32 maxDepth;
-    char* discretize;
+    char *discretize;
     uint32 nSamples, nClasses;
-    char* split;
+    char *split;
     uint32 nOrients;
     uint32 grdSmooth, chnSmooth, simSmooth;
     uint32 normRad;
@@ -36,15 +36,15 @@ public:
     uint32 nms;
     uint32 seed;
     uint32 useParfor;
-    char* modelDir;
-    char* modelFnm;
-    char* bsdsDir;
+    char *modelDir;
+    char *modelFnm;
+    char *bsdsDir;
     uint32 nChns, nChnFtrs, nSimFtrs, nTotFtrs;
     bool showpic;
     uint32 showtime;
 };
 
-class _model{
+class _model {
 public:
     _opt opts;
     Mat thrs;
@@ -58,7 +58,7 @@ public:
     Mat eBnds;
 };
 
-class _para{
+class _para {
 public:
     string name;
     float alpha;

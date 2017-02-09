@@ -24,8 +24,7 @@ void grad1(float *I, float *Gx, float *Gy, int h, int w, int x) {
     if (x == 0) {
         r = 1;
         Ip += h;
-    }
-    else if (x == w - 1) {
+    } else if (x == w - 1) {
         r = 1;
         In -= h;
     }

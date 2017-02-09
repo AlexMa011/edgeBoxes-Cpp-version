@@ -9,10 +9,6 @@
 #include "sse.hpp"
 #include <iostream>
 #include <opencv2/opencv.hpp>
-#include <algorithm>
-#include <string>
-#include <cmath>
-#include <tuple>
 #include "model.h"
 
 using namespace std;
