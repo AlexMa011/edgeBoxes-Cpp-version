@@ -55,7 +55,7 @@ void edgebox(string picname, _model model, _para o) {
 
     //for top10 box scores
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 3; i++) {
 
         //draw the bbox
         Point2f p1(bbs.at<float>(i, 0), bbs.at<float>(i, 1));
@@ -72,18 +72,17 @@ void edgebox(string picname, _model model, _para o) {
         Mat box;
         box = I.colRange(tlx, brx).rowRange(tly, bry);
 
-        rectangle(I_draw, p1, p2, 1);
+        rectangle(I_draw, p1, p2,(0,255,0), 1);
 
     }
-    cout << 1 << endl;
 
 
     //store bbs in csv file if needed
     string folder = "output/";
-    string suffix = "bbs.csv";
     string outpic = folder + filename + "_result" + picsuffix;
-    string output = folder + filename + suffix;
+    string outedges = folder + filename + "_edges" + picsuffix;
     imwrite(outpic, I_draw);
+    imwrite(outedges, E);
     //display the box, the picture stays for one minute
     if (model.opts.showpic == 1) {
         imshow("boxs", I_draw);

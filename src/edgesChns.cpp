@@ -92,7 +92,6 @@ tuple<Mat, Mat> edgesChns(Mat I, _opt opts) {
         O.release();
     }
 
-    cout << 1 << endl;
 
 
 
@@ -102,7 +101,6 @@ tuple<Mat, Mat> edgesChns(Mat I, _opt opts) {
         from_to[2 * i] = i;
         from_to[2 * i + 1] = i;
     }
-    cout << 1 << endl;
     mixChannels(mergemat, 5, &chns, 1, from_to, opts.nChns);
     assert(chns.channels() == opts.nChns);
     double chnSm = opts.chnSmooth / shrink;

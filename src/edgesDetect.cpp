@@ -128,7 +128,6 @@ tuple<Mat, Mat, Mat, Mat> edgesDetect(Mat I, _model model, int nargout) {
         Mat chnsSim;
         tie(chnsReg, chnsSim) = chns;
         double s = opts.sharpen;
-        cout << 1 << endl;
         if (s) {
             Mat I_norm, I_conv;
             normalize(I, I_norm, 0, 1, NORM_MINMAX, CV_32F);
@@ -137,7 +136,6 @@ tuple<Mat, Mat, Mat, Mat> edgesDetect(Mat I, _model model, int nargout) {
             I_norm.release();
             I_conv.release();
         }
-        cout << 1 << endl;
 
 
 
@@ -145,7 +143,6 @@ tuple<Mat, Mat, Mat, Mat> edgesDetect(Mat I, _model model, int nargout) {
         tuple<Mat, Mat, Mat> mainoutput = edgesDetectmain(model, I, chnsReg, chnsSim);
         tie(E, inds, segs) = mainoutput;
 
-        cout << 1 << endl;
 
 
 
@@ -164,7 +161,6 @@ tuple<Mat, Mat, Mat, Mat> edgesDetect(Mat I, _model model, int nargout) {
 
     }
 
-    cout << 1 << endl;
 
 
 

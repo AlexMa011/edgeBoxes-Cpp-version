@@ -41,24 +41,12 @@
 .DS_Store
 
 # models
-*.t7
 *.swp
 
 #folder
-build/
-output/
-temp/
-raw_data/
-train_data/
-label/
-cmake-build-debug/
-gui_autogen/
 
 #Unix exectuable file
-testing
-demo
-gui
-tracking
+edgebox
 
 #CmakeFiles
 CMakeCache.txt
