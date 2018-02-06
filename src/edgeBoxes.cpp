@@ -83,7 +83,11 @@ void edgebox(string picname, _model model, _para o) {
     string outpic = folder + filename + "_result" + picsuffix;
     string outedges = folder + filename + "_edges" + picsuffix;
     imwrite(outpic, I_draw);
-    imwrite(outedges, E);
+    double E_min,E_max;
+    cv::minMaxLoc(E, &E_min, &E_max);
+    Mat E_draw = (E-E_min)/(E_max-E_min)*255;
+    E_draw.convertTo(E_draw, CV_8U);
+    imwrite(outedges, E_draw);
     //display the box, the picture stays for one minute
     if (model.opts.showpic == 1) {
         imshow("boxs", I_draw);
