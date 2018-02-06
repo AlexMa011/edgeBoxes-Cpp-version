@@ -1,0 +1,70 @@
+#origin files
+*.orig
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+*.pyc
+*.mp4
+*.mov
+*~
+~*
+.idea
+
+# Mac DS_Store files
+.DS_Store
+
+# models
+*.t7
+*.swp
+
+#folder
+build/
+output/
+temp/
+raw_data/
+train_data/
+img/
+label/
+cmake-build-debug/
+gui_autogen/
+
+#Unix exectuable file
+testing
+demo
+gui
+tracking
+
+#CmakeFiles
+CMakeCache.txt
+Makefile
+cmake*
+Cmake*
+CmakeFiles/
+!CMakeLists.txt

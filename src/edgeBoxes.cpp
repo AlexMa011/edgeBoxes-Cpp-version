@@ -17,7 +17,7 @@ _para initial_para();
 
 tuple<Mat, Mat, Mat, Mat> edgesDetect(Mat, _model, int);
 
-Mat parts_localization_main(Mat, Mat, _para);
+Mat edgebox_main(Mat, Mat, _para);
 
 Mat edgesNms(Mat, Mat, int, int, float, int);
 
@@ -25,7 +25,7 @@ Mat edgesNms(Mat, Mat, int, int, float, int);
 void writeout(string, Mat, const char *);
 
 
-void parts_localization(string picname, _model model, _para o) {
+void edgebox(string picname, _model model, _para o) {
     Mat I = imread(picname);
     assert(I.rows != 0 && I.cols != 0);
 
@@ -35,17 +35,15 @@ void parts_localization(string picname, _model model, _para o) {
     float shrink = 1;
     resize(I, I_resize, Size(), 1/shrink, 1/shrink);
     tuple<Mat, Mat, Mat, Mat> detect = edgesDetect(I_resize, model, 4);
-    //out << ((double) clock() - begin) / CLOCKS_PER_SEC << endl;
     Mat E, O, unuse1, unuse2;
     tie(E, O, unuse1, unuse2) = detect;
-    //cout << ((double) clock() - begin) / CLOCKS_PER_SEC << endl;
     E = edgesNms(E, O, 2, 0, 1, model.opts.nThreads);
     Mat bbs;
-    bbs = parts_localization_main(E, O, o) * shrink;
-    //cout << ((double) clock() - begin) / CLOCKS_PER_SEC << endl;
+    bbs = edgebox_main(E, O, o) * shrink;
 
 
-    string picsuffix = ".jpg";
+
+    string picsuffix = ".png";
     unsigned long picfolderxpos = picname.find("/");
     string filename = picname.erase(0, picfolderxpos + 1);
     unsigned long picsuffixpos = filename.find(".");
@@ -77,6 +75,7 @@ void parts_localization(string picname, _model model, _para o) {
         rectangle(I_draw, p1, p2, 1);
 
     }
+    cout << 1 << endl;
 
 
     //store bbs in csv file if needed
@@ -84,7 +83,6 @@ void parts_localization(string picname, _model model, _para o) {
     string suffix = "bbs.csv";
     string outpic = folder + filename + "_result" + picsuffix;
     string output = folder + filename + suffix;
-    writeout(output, bbs, "csv");
     imwrite(outpic, I_draw);
     //display the box, the picture stays for one minute
     if (model.opts.showpic == 1) {

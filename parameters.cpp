@@ -228,12 +228,3 @@ void fillmatu(uint8 *I_data, Mat I) {
     }
 }
 
-
-//write to csv/numpy/matlab/python/c style array
-void writeout(string filename, Mat m, const char *filetype) {
-    Formatter const *c_formatter(Formatter::get(filetype));
-    ofstream myfile;
-    myfile.open(filename.c_str());
-    c_formatter->write(myfile, m);
-    myfile.close();
-}

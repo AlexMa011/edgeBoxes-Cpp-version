@@ -677,7 +677,7 @@ void boxesNms(Boxes &boxes, float thr, float eta, int maxBoxes) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-Mat parts_localization_main(Mat E0, Mat O0, _para o) {
+Mat edgebox_main(Mat E0, Mat O0, _para o) {
     // check and get inputs
     arrayf E;
     arrayf O;
@@ -710,6 +710,7 @@ Mat parts_localization_main(Mat E0, Mat O0, _para o) {
     edgeBoxGen._gamma = o.gamma;
     edgeBoxGen._kappa = o.kappa;
     edgeBoxGen.generate(boxes, E, O, V);
+    boxesNms(boxes,edgeBoxGen._beta,edgeBoxGen._eta,edgeBoxGen._maxBoxes);
 
     // create output bbs and output to Matlab
     int n = (int) boxes.size();

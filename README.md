@@ -2,7 +2,7 @@
 
 ###Introduction
 
-TThis is a c++ verison of pdollar's [edgeBoxes](https://github.com/pdollar/edges) algorithm.
+This is a c++ verison of pdollar's [edgeBoxes](https://github.com/pdollar/edges) algorithm.
 
 ###Dependencies
 
@@ -25,14 +25,7 @@ Remember to delete CMakeCache.txt if needed.
 
 
 If you want to see the pic immediately, set the showpic para to be 1.
-The output bbox infomation in stored in output folder as csv format.
-The picture result with bbox and orientation is stored in output folder.
-
-The csv file contains five column:
-the first two is the left corner coordinates, 
-the next two is width and height and 
-the last one is scores.
-And the boxes is stored in score order from high to low.
+The result image is stored in output folder.
 
 Tools folder contains function for image processing.
 The parameters.cpp file contains function about loading model, type conversion and initialize

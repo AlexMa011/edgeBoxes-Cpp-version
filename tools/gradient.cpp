@@ -48,7 +48,9 @@ Mat gradientHist(Mat M, Mat O, int bin, int nOrients, bool softbin) {
     int wb = M.cols / bin;
     float *H_data = new float[hb * wb * nOrients];
     for (int i = 0; i < hb * wb * nOrients; i++) H_data[i] = 0.f;
+    cout << 1 << endl;
     gradHist(M_data, O_data, H_data, M.rows, M.cols, bin, nOrients, softbin);
+    cout << 1 << endl;
     Mat H(hb, wb, CV_32FC(nOrients));
     fillmat(H_data, H);
 
