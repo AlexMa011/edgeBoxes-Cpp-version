@@ -50,7 +50,6 @@ output/
 temp/
 raw_data/
 train_data/
-img/
 label/
 cmake-build-debug/
 gui_autogen/
