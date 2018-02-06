@@ -40,8 +40,7 @@ void edgebox(string picname, _model model, _para o) {
     E = edgesNms(E, O, 2, 0, 1, model.opts.nThreads);
     Mat bbs;
     bbs = edgebox_main(E, O, o) * shrink;
-
-
+    cout << "time:" << ((double) clock() - begin) / CLOCKS_PER_SEC << "s" << endl;
 
     string picsuffix = ".png";
     unsigned long picfolderxpos = picname.find("/");
@@ -72,7 +71,9 @@ void edgebox(string picname, _model model, _para o) {
         Mat box;
         box = I.colRange(tlx, brx).rowRange(tly, bry);
 
-        rectangle(I_draw, p1, p2,(0,255,0), 1);
+        rectangle(I_draw, p1, p2,Scalar(0,255,0), 1);
+        Point2f ptext(bbs.at<float>(i, 0), bbs.at<float>(i, 1)-3);
+        putText(I_draw,to_string(bbs.at<float>(i,4)),ptext,FONT_HERSHEY_SIMPLEX,0.5,Scalar(0,255,0),1);
 
     }
 

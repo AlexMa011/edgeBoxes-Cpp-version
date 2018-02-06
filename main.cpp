@@ -35,9 +35,7 @@ int main() {
 
 
     string picname = "img/peppers.png";
-    clock_t begin = clock();
     edgebox(picname, model, para);
-    cout << "time:" << ((double) clock() - begin) / CLOCKS_PER_SEC << endl;
     std::cout << "Done!" << std::endl;//for test
     return 0;
 }

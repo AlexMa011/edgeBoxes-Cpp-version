@@ -36,7 +36,7 @@ _model loadmodel() {
 
     mat_t *matfp;
     matvar_t *model;
-    matfp = Mat_Open("data/model.mat", MAT_ACC_RDONLY);
+    matfp = Mat_Open("model/model.mat", MAT_ACC_RDONLY);
     assert(matfp != NULL);
     model = Mat_VarRead(matfp, "model");
     assert(model != NULL);
