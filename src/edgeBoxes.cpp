@@ -55,7 +55,7 @@ void edgebox(string picname, _model model, _para o) {
 
     //for top10 box scores
 
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < model.opts.showboxnum; i++) {
 
         //draw the bbox
         Point2f p1(bbs.at<float>(i, 0), bbs.at<float>(i, 1));

@@ -1,10 +1,10 @@
 
 
-###Introduction
+### Introduction
 
 This is a c++ verison of pdollar's [edgeBoxes](https://github.com/pdollar/edges) algorithm.
 
-###Dependencies
+### Dependencies
 
 [Opencv2](http://opencv.org/downloads.html)
  is required. The installation documentation can be find [here](http://docs.opencv.org/2.4/doc/tutorials/introduction/table_of_content_introduction/table_of_content_introduction.html).
@@ -14,7 +14,7 @@ And you need to install the matiolib(needed to load model in mat format). Downlo
 If you are using Mac OS with homebrew, just use brew install to install opencv2 and libmatio.
 
 
-###Getting Started
+### Getting Started
 Switch to the main folder, and type the following command to run compile and run:
 ```code:
 $ cmake .

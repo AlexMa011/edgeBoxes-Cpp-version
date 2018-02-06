@@ -28,6 +28,7 @@ int main() {
     model.opts.showpic = 1;//set if show picture or not
     model.opts.showtime = 10;//in s
     model.opts.stride = 2;
+    model.opts.showboxnum = 15;
     _para para = initial_para();
     cout << "model loaded!" << endl;
 

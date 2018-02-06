@@ -42,6 +42,7 @@ public:
     uint32 nChns, nChnFtrs, nSimFtrs, nTotFtrs;
     bool showpic;
     uint32 showtime;
+    uint32 showboxnum;
 };
 
 class _model {
