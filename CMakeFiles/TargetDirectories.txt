@@ -1,3 +1,0 @@
-/SSD2/alex/edgeBoxes-Cpp-version/CMakeFiles/edit_cache.dir
-/SSD2/alex/edgeBoxes-Cpp-version/CMakeFiles/rebuild_cache.dir
-/SSD2/alex/edgeBoxes-Cpp-version/CMakeFiles/edgebox.dir
