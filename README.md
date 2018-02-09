@@ -2,7 +2,7 @@
 
 ### Introduction
 
-This is a c++ verison of pdollar's [edgeBoxes](https://github.com/pdollar/edges) algorithm.
+This is a c++ implementation of pdollar's [Structured Edge Detection Toolbox](https://github.com/pdollar/edges) algorithm.
 
 ### Dependencies
 
