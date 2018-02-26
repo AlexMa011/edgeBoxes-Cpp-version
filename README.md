@@ -33,6 +33,11 @@ parameters. Parameters can be changed in initial_para() function in parameters.c
 
 ### Demo
 
-Origin image: ![origin](./img/peppers.png)
-Edge image: ![edge](./output/peppers_edges.png)
-Detection image: ![detection](./output/peppers_result.png)
+##### Origin image: 
+![origin](./img/peppers.png)
+
+##### Edge image: 
+![edge](./output/peppers_edges.png)
+
+##### Detection image: 
+![detection](./output/peppers_result.png)
