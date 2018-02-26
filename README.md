@@ -30,3 +30,9 @@ The result image is stored in output folder.
 Tools folder contains function for image processing.
 The parameters.cpp file contains function about loading model, type conversion and initialize
 parameters. Parameters can be changed in initial_para() function in parameters.cpp.
+
+### Demo
+
+Origin image: ![origin](./img/peppers.png)
+Edge image: ![edge](./output/peppers_edges.png)
+Detection image: ![detection](./output/peppers_result.png)
